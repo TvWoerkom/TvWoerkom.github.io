@@ -1,9 +1,9 @@
-// Function to scan the video feed for QR codes
+// Function to scan the QR code and handle various logic (play Spotify, etc.)
 async function scanQRCode(videoElement) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   const nextButton = document.getElementById('next-button');
-  
+
   // Set the canvas size to match the video dimensions
   canvas.width = videoElement.videoWidth;
   canvas.height = videoElement.videoHeight;
@@ -32,18 +32,20 @@ async function scanQRCode(videoElement) {
         if (spotifyURI) {
           console.log('Opening Spotify URI:', spotifyURI);
 
-          // Play the song using Spotify Web API
+          // Get the access token and play the song
           const accessToken = localStorage.getItem('spotify_token');
-          console.log(`Bearer ${accessToken}`);
-
-          playSpotifyTrack(spotifyURI, accessToken);
+          if (accessToken) {
+            playSpotifyTrack(spotifyURI, accessToken); // Play track via Spotify API
+          } else {
+            alert("Spotify access token not found!");
+          }
         }
       } else if (isValidURL(code.data)) {
         // For other valid URLs, show a confirmation to the user before opening the link
         const userConfirmed = confirm(`QR Code detected: ${code.data}\n\nDo you want to open this link?`);
-        //if (userConfirmed) {
-          //window.open(code.data, '_blank'); // Open other valid URLs in a new tab
-        //}
+        if (userConfirmed) {
+          window.open(code.data, '_blank'); // Open other valid URLs in a new tab
+        }
       } else {
         alert(`QR Code detected but it's not a valid URL: ${code.data}`);
       }
@@ -140,8 +142,8 @@ async function playSpotifyTrack(spotifyTrackURI, accessToken, position = 0) {
   }
 }
 
-// pause spotify playback - FIX: Add async to allow use of await
-async function pauseSpotifyPlayback() {
+// pause spotify playback
+function pauseSpotifyPlayback() {
   const accessToken = localStorage.getItem('spotify_token');
   const url = 'https://api.spotify.com/v1/me/player/pause';  // Spotify API endpoint to pause playback
 
