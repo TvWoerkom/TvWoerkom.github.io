@@ -21,17 +21,20 @@ async function showCameraFeed() {
     const videoDevices = await getMediaDevices();
 
     if (videoDevices.length > 0) {
-      // Check if the device is a mobile phone or tablet and use the back-facing camera
-      const constraints = {
-        video: {
-          facingMode: 'environment', // This will try to use the back-facing camera (main camera)
-        }
-      };
+      // Try to find the back-facing camera
+      const backCamera = videoDevices.find(device => device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('environment'));
 
-      // Request access to the camera (back-facing on mobile or default on desktop)
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      videoElement.srcObject = stream; // Set the camera feed to the video element
-      messageElement.style.display = 'none';  // Hide the message if access is granted
+      if (backCamera) {
+        // Request access to the back-facing camera (main camera)
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { deviceId: backCamera.deviceId }
+        });
+        videoElement.srcObject = stream; // Set the camera feed to the video element
+        messageElement.style.display = 'none';  // Hide the message if access is granted
+      } else {
+        console.error('No back-facing camera found');
+        messageElement.style.display = 'block';
+      }
     } else {
       console.error('No video devices found');
     }
