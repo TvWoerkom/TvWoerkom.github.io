@@ -1,16 +1,22 @@
-// Function to scan the video feed for QR codes
+// Function to scan the QR code and handle various logic (play Spotify, etc.)
 async function scanQRCode(videoElement) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
-  const messageElement = document.getElementById('message');
   const nextButton = document.getElementById('next-button');
 
   // Set the canvas size to match the video dimensions
   canvas.width = videoElement.videoWidth;
   canvas.height = videoElement.videoHeight;
 
-  // Continuously scan the video feed for QR codes
-  function scan() {
+  let stopScanning = false; // Flag to control scanning loop
+
+  // Start scanning using setInterval to repeatedly check for QR codes
+  const scanInterval = setInterval(() => {
+    if (stopScanning) {
+      clearInterval(scanInterval); // Stop scanning immediately
+      return; // Exit the function
+    }
+
     ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const code = jsQR(imageData.data, canvas.width, canvas.height);
@@ -24,8 +30,15 @@ async function scanQRCode(videoElement) {
         const spotifyURI = convertToSpotifyURI(code.data);
 
         if (spotifyURI) {
-          // Open directly in Spotify app (if available)
-          window.location.href = spotifyURI;
+          console.log('Opening Spotify URI:', spotifyURI);
+
+          // Get the access token and play the song
+          const accessToken = localStorage.getItem('spotify_token');
+          if (accessToken) {
+            playSpotifyTrack(spotifyURI, accessToken); // Play track via Spotify API
+          } else {
+            alert("Spotify access token not found!");
+          }
         }
       } else if (isValidURL(code.data)) {
         // For other valid URLs, show a confirmation to the user before opening the link
@@ -36,6 +49,9 @@ async function scanQRCode(videoElement) {
       } else {
         alert(`QR Code detected but it's not a valid URL: ${code.data}`);
       }
+
+      // Stop scanning immediately after detecting a valid QR code
+      stopScanning = true; // Set flag to stop further scanning
 
       // Hide the video and stop the stream once a link is detected
       const stream = videoElement.srcObject;
@@ -49,14 +65,10 @@ async function scanQRCode(videoElement) {
       nextButton.style.display = 'block';
 
       return; // Stop further scanning once a valid QR code is found
-    } else {
-      // Continue scanning
-      requestAnimationFrame(scan);
     }
-  }
+  }, 100); // Check every 100ms (you can adjust the interval timing as needed)
 
-  // Start scanning
-  scan();
+  // This interval will be cleared as soon as `stopScanning` becomes true.
 }
 
 // Function to check if a URL is a Spotify link
@@ -101,6 +113,61 @@ function isValidURL(string) {
   }
 }
 
+// Function to play a Spotify track using the Web API
+async function playSpotifyTrack(spotifyTrackURI, accessToken, position = 0) {
+  const payload = {
+    context_uri: spotifyTrackURI  // Dynamically set the track URI
+  };
+
+  const url = 'https://api.spotify.com/v1/me/player/play';
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`, // Pass the token dynamically
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)  // Send the dynamically created payload as JSON
+    });
+
+    if (response.ok) {
+      console.log('Track is playing successfully!');
+    } else {
+      const errorData = await response.json();
+      console.error('Error playing track:', errorData);
+    }
+  } catch (error) {
+    console.error('Network error:', error);
+  }
+}
+
+// pause spotify playback
+function pauseSpotifyPlayback() {
+  const accessToken = localStorage.getItem('spotify_token');
+  const url = 'https://api.spotify.com/v1/me/player/pause';  // Spotify API endpoint to pause playback
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',  // Using PUT to pause playback
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,  // Pass the access token in the Authorization header
+        'Content-Type': 'application/json'  // Set the content type to JSON
+      }
+    });
+
+    if (response.ok) {
+      console.log('Playback paused successfully!');
+    } else {
+      const errorData = await response.json();
+      console.error('Error pausing playback:', errorData);
+    }
+  } catch (error) {
+    console.error('Network error:', error);
+  }
+}
+
+
 // Initialize QR code scanning after the camera feed starts
 function startQRCodeScanning(videoElement) {
   // Wait until the video element is ready (it might take a moment to start playing)
@@ -113,7 +180,7 @@ function startQRCodeScanning(videoElement) {
 function startNextScan() {
   const videoElement = document.getElementById('camera-feed');
   const nextButton = document.getElementById('next-button');
-
+  
   // Show the video element and hide the "Next" button
   videoElement.style.display = 'block';
   nextButton.style.display = 'none';
