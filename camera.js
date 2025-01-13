@@ -11,24 +11,26 @@ async function getMediaDevices() {
   }
 }
 
-// Function to show the camera feed
+// Function to request camera access and show the camera feed inside the div
 async function showCameraFeed() {
-  const videoElement = document.createElement('video');
-  videoElement.style.width = '100%';  // Make the video full width
-  document.body.appendChild(videoElement);
+  const videoElement = document.getElementById('camera-feed'); // Get the video element by ID
 
   try {
+    // Get available video devices (cameras)
     const videoDevices = await getMediaDevices();
 
     if (videoDevices.length > 0) {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevices[0].deviceId } });
-      videoElement.srcObject = stream;
-      videoElement.play();
+      // Request access to the first available camera
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { deviceId: videoDevices[0].deviceId } 
+      });
+      videoElement.srcObject = stream; // Set the camera feed to the video element
     } else {
       console.error('No video devices found');
     }
   } catch (error) {
     console.error('Error accessing camera:', error);
+    alert("Camera access was denied or unavailable.");
   }
 }
 
