@@ -25,11 +25,6 @@
       text-align: center; /* Center the message */
       display: none; /* Hide the message initially */
     }
-    #camera-select {
-      margin: 20px 0; /* Add margin for spacing */
-      padding: 10px;  /* Add padding inside the select */
-      display: none;  /* Hide the select initially */
-    }
   </style>
 </head>
 <body>
@@ -38,18 +33,13 @@
   <!-- Message to prompt user to allow camera access -->
   <div id="message">Please allow camera access to view the feed.</div>
 
-  <!-- Dropdown for selecting a camera -->
-  <select id="camera-select">
-    <option value="">Select a camera</option>
-  </select>
-
   <!-- Div for camera feed -->
   <div id="camera-container">
     <video id="camera-feed" autoplay></video>
   </div>
 
   <!-- Link to external JavaScript file -->
-  <script src="camera.js"></script>
+  <script src="script.js"></script>
 
 </body>
 </html>
