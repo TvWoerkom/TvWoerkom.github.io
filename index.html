@@ -5,40 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Camera Feed</title>
   <style>
-    /* Style the camera feed container with a frame */
     #camera-container {
-      width: 80%;         /* Set width of the container */
-      max-width: 600px;   /* Maximum width of the container */
-      margin: 20px auto;  /* Center the container */
-      border: 5px solid #4CAF50; /* Green border (frame) */
-      border-radius: 10px; /* Rounded corners */
-      padding: 10px;      /* Add padding inside the frame */
-      background-color: #f9f9f9; /* Optional background color */
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      border: 5px solid #4CAF50;
+      border-radius: 10px;
+      padding: 10px;
+      background-color: #f9f9f9;
     }
     video {
-      width: 100%;        /* Make the video element fill the container */
-      border-radius: 5px; /* Optional rounded corners on the video */
+      width: 100%;
+      border-radius: 5px;
     }
     #message {
-      color: red; /* Set message color to red */
-      font-size: 18px; /* Make the message a bit larger */
-      text-align: center; /* Center the message */
-      display: none; /* Hide the message initially */
+      color: red;
+      font-size: 18px;
+      text-align: center;
+      display: none;
+    }
+    #loading-message {
+      text-align: center;
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
 
   <h1>Camera Feed</h1>
-  <!-- Message to prompt user to allow camera access -->
-  <div id="message">Please allow camera access to view the feed.</div>
 
-  <!-- Div for camera feed -->
+  <div id="loading-message">Loading camera devices...</div>
+
   <div id="camera-container">
     <video id="camera-feed" autoplay></video>
   </div>
 
-  <!-- Link to the external camera.js file -->
+  <div id="message"></div>
+
   <script src="camera.js"></script>
 
 </body>
