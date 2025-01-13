@@ -1,5 +1,3 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,11 +19,20 @@
       width: 100%;        /* Make the video element fill the container */
       border-radius: 5px; /* Optional rounded corners on the video */
     }
+    #message {
+      color: red; /* Set message color to red */
+      font-size: 18px; /* Make the message a bit larger */
+      text-align: center; /* Center the message */
+      display: none; /* Hide the message initially */
+    }
   </style>
 </head>
 <body>
 
   <h1>Camera Feed</h1>
+  <!-- Message to prompt user to allow camera access -->
+  <div id="message">Please allow camera access to view the feed.</div>
+
   <!-- Div for camera feed -->
   <div id="camera-container">
     <video id="camera-feed" autoplay></video>
