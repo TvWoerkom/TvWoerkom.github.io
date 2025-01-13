@@ -57,4 +57,4 @@ async function showCameraFeed(deviceId) {
 }
 
 // Call the function to show the camera selection when the page loads
-window.onload = showCameraSelection;  this worked best, continue with that
+window.onload = showCameraSelection
