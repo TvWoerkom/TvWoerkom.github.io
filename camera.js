@@ -6,30 +6,55 @@ async function getMediaDevices() {
     return videoDevices;
   } catch (error) {
     console.error('Error accessing devices:', error);
-    return [];
   }
 }
 
-// Function to display all video device names on the HTML page
-async function displayVideoDevices() {
+// Function to show all video devices and let the user select one
+async function showCameraSelection() {
   const devices = await getMediaDevices();
-  const videoDeviceList = document.getElementById('video-device-list'); // Get the element to display the list
+  const selectElement = document.getElementById('camera-select');
+  
+  // Populate the select dropdown with all available cameras
+  devices.forEach(device => {
+    const option = document.createElement('option');
+    option.value = device.deviceId;
+    option.text = device.label || `Camera ${device.deviceId}`;
+    selectElement.appendChild(option);
+  });
 
-  // Clear any previous content
-  videoDeviceList.innerHTML = '';
-
-  // Check if there are video devices
-  if (devices.length === 0) {
-    videoDeviceList.innerHTML = '<p>No video devices found.</p>';
-  } else {
-    // Loop through all video devices and display their names
-    devices.forEach(device => {
-      const listItem = document.createElement('li');
-      listItem.textContent = device.label || 'Unnamed Device'; // Display the label, or "Unnamed Device" if no label
-      videoDeviceList.appendChild(listItem);
+  // If there are cameras available, set up the selected camera to show the feed
+  if (devices.length > 0) {
+    selectElement.style.display = 'block';  // Show the camera selection dropdown
+    selectElement.addEventListener('change', (event) => {
+      const selectedDeviceId = event.target.value;
+      showCameraFeed(selectedDeviceId);  // Show the selected camera feed
     });
+
+    // Show feed from the first camera by default
+    showCameraFeed(devices[0].deviceId);
+  } else {
+    console.error('No video devices found');
   }
 }
 
-// Call the function to display video devices when the page loads
-window.onload = displayVideoDevices;
+// Function to request camera access and show the camera feed inside the div
+async function showCameraFeed(deviceId) {
+  const videoElement = document.getElementById('camera-feed'); // Get the video element by ID
+  const messageElement = document.getElementById('message');   // Get the message element by ID
+
+  try {
+    // Request access to the selected camera
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { deviceId }
+    });
+    videoElement.srcObject = stream; // Set the camera feed to the video element
+    messageElement.style.display = 'none';  // Hide the message if access is granted
+  } catch (error) {
+    console.error('Error accessing camera:', error);
+    // Show message if camera access is denied
+    messageElement.style.display = 'block';
+  }
+}
+
+// Call the function to show the camera selection when the page loads
+window.onload = showCameraSelection;
