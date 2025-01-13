@@ -63,5 +63,13 @@ async function showCameraFeed() {
   }
 }
 
+// Initialize QR code scanning after the camera feed starts
+function startQRCodeScanning(videoElement) {
+  // Wait until the video element is ready (it might take a moment to start playing)
+  videoElement.onplay = () => {
+    scanQRCode(videoElement);
+  };
+}
+
 // Call the function to show the camera feed when the page loads
 window.onload = showCameraFeed;
