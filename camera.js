@@ -6,39 +6,30 @@ async function getMediaDevices() {
     return videoDevices;
   } catch (error) {
     console.error('Error accessing devices:', error);
+    return [];
   }
 }
 
-// Function to automatically select the back-facing camera
-async function showCameraFeed() {
-  const videoElement = document.getElementById('camera-feed'); // Get the video element by ID
-  const messageElement = document.getElementById('message');   // Get the message element by ID
+// Function to display all video device names on the HTML page
+async function displayVideoDevices() {
+  const devices = await getMediaDevices();
+  const videoDeviceList = document.getElementById('video-device-list'); // Get the element to display the list
 
-  try {
-    const devices = await getMediaDevices();
-    const backCamera = devices.find(device => device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('environment'));
-    
-    if (backCamera) {
-      // Request access to the back camera (using the found back camera deviceId)
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: backCamera.deviceId }
-      });
-      videoElement.srcObject = stream; // Set the camera feed to the video element
-      messageElement.style.display = 'none';  // Hide the message if access is granted
-    } else {
-      // If no back camera is found, fall back to the first available camera
-      const fallbackCamera = devices[0];
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: fallbackCamera.deviceId }
-      });
-      videoElement.srcObject = stream;
-      messageElement.style.display = 'none';  // Hide the message if access is granted
-    }
-  } catch (error) {
-    console.error('Error accessing camera:', error);
-    messageElement.style.display = 'block'; // Show the message if camera access is denied
+  // Clear any previous content
+  videoDeviceList.innerHTML = '';
+
+  // Check if there are video devices
+  if (devices.length === 0) {
+    videoDeviceList.innerHTML = '<p>No video devices found.</p>';
+  } else {
+    // Loop through all video devices and display their names
+    devices.forEach(device => {
+      const listItem = document.createElement('li');
+      listItem.textContent = device.label || 'Unnamed Device'; // Display the label, or "Unnamed Device" if no label
+      videoDeviceList.appendChild(listItem);
+    });
   }
 }
 
-// Call the function to show the camera feed when the page loads
-window.onload = showCameraFeed;
+// Call the function to display video devices when the page loads
+window.onload = displayVideoDevices;
