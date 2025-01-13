@@ -18,11 +18,13 @@ async function scanQRCode(videoElement) {
     if (code) {
       console.log('QR Code found:', code.data);
 
-      // Check if the QR code contains a valid URL
-      if (isValidURL(code.data)) {
+      // Open Spotify links directly in the app
+      if (isSpotifyLink(code.data)) {
+        location.href = code.data; // Directly navigate to the Spotify link
+      } else if (isValidURL(code.data)) {
         const userConfirmed = confirm(`QR Code detected: ${code.data}\n\nDo you want to open this link?`);
         if (userConfirmed) {
-          window.open(code.data, '_blank'); // Open the link in a new tab
+          window.open(code.data, '_blank'); // Open other valid URLs in a new tab
         }
       } else {
         alert(`QR Code detected but it's not a valid URL: ${code.data}`);
@@ -37,6 +39,11 @@ async function scanQRCode(videoElement) {
 
   // Start scanning
   scan();
+}
+
+// Function to check if a URL is a Spotify link
+function isSpotifyLink(string) {
+  return string.startsWith('https://open.spotify.com/');
 }
 
 // Function to validate if the detected text is a URL
