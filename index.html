@@ -24,23 +24,15 @@
       text-align: center;
       display: none;
     }
-    #loading-message {
-      text-align: center;
-      font-size: 18px;
-    }
   </style>
 </head>
 <body>
 
   <h1>Camera Feed</h1>
-
-  <div id="loading-message">Loading camera devices...</div>
-
+  <div id="message">Please allow camera access to view the feed.</div>
   <div id="camera-container">
     <video id="camera-feed" autoplay></video>
   </div>
-
-  <div id="message"></div>
 
   <script src="camera.js"></script>
 
