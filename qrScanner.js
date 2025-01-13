@@ -18,11 +18,14 @@ async function scanQRCode(videoElement) {
     if (code) {
       console.log('QR Code found:', code.data);
 
-      // Open the URL directly if it is valid
+      // Check if the QR code contains a valid URL
       if (isValidURL(code.data)) {
-        location.href = code.data; // Navigate to the URL in the current tab
+        const userConfirmed = confirm(`QR Code detected: ${code.data}\n\nDo you want to open this link?`);
+        if (userConfirmed) {
+          window.open(code.data, '_blank'); // Open the link in a new tab
+        }
       } else {
-        console.log('Detected QR Code is not a valid URL:', code.data);
+        alert(`QR Code detected but it's not a valid URL: ${code.data}`);
       }
 
       return; // Stop further scanning
