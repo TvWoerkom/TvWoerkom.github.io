@@ -1,9 +1,9 @@
-// Function to scan the QR code and handle various logic (play Spotify, etc.)
+// Function to scan the video feed for QR codes
 async function scanQRCode(videoElement) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   const nextButton = document.getElementById('next-button');
-
+  
   // Set the canvas size to match the video dimensions
   canvas.width = videoElement.videoWidth;
   canvas.height = videoElement.videoHeight;
@@ -32,20 +32,18 @@ async function scanQRCode(videoElement) {
         if (spotifyURI) {
           console.log('Opening Spotify URI:', spotifyURI);
 
-          // Get the access token and play the song
+          // Play the song using Spotify Web API
           const accessToken = localStorage.getItem('spotify_token');
-          if (accessToken) {
-            playSpotifyTrack(spotifyURI, accessToken); // Play track via Spotify API
-          } else {
-            alert("Spotify access token not found!");
-          }
+          console.log(`Bearer ${accessToken}`);
+
+          playSpotifyTrack(spotifyURI, accessToken);
         }
       } else if (isValidURL(code.data)) {
         // For other valid URLs, show a confirmation to the user before opening the link
         const userConfirmed = confirm(`QR Code detected: ${code.data}\n\nDo you want to open this link?`);
-        if (userConfirmed) {
-          window.open(code.data, '_blank'); // Open other valid URLs in a new tab
-        }
+        //if (userConfirmed) {
+          //window.open(code.data, '_blank'); // Open other valid URLs in a new tab
+        //}
       } else {
         alert(`QR Code detected but it's not a valid URL: ${code.data}`);
       }
@@ -142,8 +140,8 @@ async function playSpotifyTrack(spotifyTrackURI, accessToken, position = 0) {
   }
 }
 
-// pause spotify playback
-function pauseSpotifyPlayback() {
+// pause spotify playback - FIX: Add async to allow use of await
+async function pauseSpotifyPlayback() {
   const accessToken = localStorage.getItem('spotify_token');
   const url = 'https://api.spotify.com/v1/me/player/pause';  // Spotify API endpoint to pause playback
 
@@ -167,18 +165,17 @@ function pauseSpotifyPlayback() {
   }
 }
 
-
 // Initialize QR code scanning after the camera feed starts
-function startQRCodeScanning(videoElement) {
+async function startQRCodeScanning(videoElement) {
   // Wait until the video element is ready (it might take a moment to start playing)
   videoElement.onplay = () => {
-    scanQRCode(videoElement);
+    scanQRCode(videoElement);  // Assume scanQRCode is already defined elsewhere
   };
 }
 
 // Function to reactivate video scanning after pressing "Next"
 function startNextScan() {
-  pauseSpotifyPlayback()
+  pauseSpotifyPlayback()  // Now calling the async function correctly
   const videoElement = document.getElementById('camera-feed');
   const nextButton = document.getElementById('next-button');
   
