@@ -1,6 +1,6 @@
 const CLIENT_ID = 'e187e22b716b4ed2956745f64e47e4ac';
 const CLIENT_SECRET = '8851dc85bf57469ca256e96b4a14068a';
-const REDIRECT_URI = 'https://tvwoerkom.github.io/'; // Update with your actual redirect URI
+const REDIRECT_URI = "C:\Users\woerkom\Downloads\TvWoerkom.github.io-main\TvWoerkom.github.io-main\index.html"; // Update with your actual redirect URI
 const SCOPES = 'user-library-read user-read-playback-state user-modify-playback-state'; // Add more scopes if needed
 
 // Base64 Encode the Client ID and Secret for client credentials flow (if needed)

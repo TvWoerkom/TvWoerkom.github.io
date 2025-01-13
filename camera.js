@@ -1,5 +1,3 @@
-// camera.js
-
 // Function to get all media devices
 async function getMediaDevices() {
   try {
@@ -54,7 +52,7 @@ async function showCameraFeed() {
       messageElement.style.display = 'none';
 
       // Start QR code scanning after the camera feed starts
-      startQRCodeScanning(videoElement);
+      await startQRCodeScanning(videoElement); // Make sure the function is called correctly
     }
   } catch (error) {
     console.error('Error accessing camera:', error);
@@ -64,10 +62,10 @@ async function showCameraFeed() {
 }
 
 // Initialize QR code scanning after the camera feed starts
-function startQRCodeScanning(videoElement) {
+async function startQRCodeScanning(videoElement) {
   // Wait until the video element is ready (it might take a moment to start playing)
   videoElement.onplay = () => {
-    scanQRCode(videoElement);
+    scanQRCode(videoElement);  // Assume scanQRCode is already defined elsewhere
   };
 }
 
