@@ -1,3 +1,5 @@
+// camera.js
+
 // Function to get all media devices
 async function getMediaDevices() {
   try {
@@ -18,7 +20,7 @@ async function showCameraFeed() {
   try {
     const devices = await getMediaDevices();
 
-    // Try to find the back-facing camera by checking the facingMode of the camera
+    // Try to find the back-facing camera by checking the label for 'back' or 'environment'
     const backCamera = devices.find(device => device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('environment'));
 
     let cameraToUse = null;
@@ -27,7 +29,7 @@ async function showCameraFeed() {
     if (backCamera) {
       cameraToUse = backCamera;
     } else {
-      // Look for a camera with facingMode: "environment"
+      // Look for a camera with 'environment' in the label
       const environmentCamera = devices.find(device => device.label.toLowerCase().includes('environment'));
 
       // If found, use it as the back camera
@@ -50,8 +52,10 @@ async function showCameraFeed() {
 
       // Hide the "Please allow camera access" message
       messageElement.style.display = 'none';
-    }
 
+      // Start QR code scanning after the camera feed starts
+      startQRCodeScanning(videoElement);
+    }
   } catch (error) {
     console.error('Error accessing camera:', error);
     // Show the message if there was an issue accessing the camera

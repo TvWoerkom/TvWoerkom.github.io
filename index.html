@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Camera Feed</title>
+  <title>Camera Feed with QR Code Scanner</title>
   <style>
     #camera-container {
       width: 100%;
@@ -24,17 +24,28 @@
       text-align: center;
       display: none;
     }
+    #loading-message {
+      text-align: center;
+      font-size: 18px;
+    }
   </style>
 </head>
 <body>
 
-  <h1>Camera Feed</h1>
-  <div id="message">Please allow camera access to view the feed.</div>
+  <h1>Camera Feed with QR Code Scanner</h1>
+
   <div id="camera-container">
     <video id="camera-feed" autoplay></video>
   </div>
 
+  <div id="message"></div>
+
+  <!-- Include QR Code Scanner -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
+  
+  <!-- Include Camera Feed and QR Code Scanner Logic -->
   <script src="camera.js"></script>
+  <script src="qrScanner.js"></script>
 
 </body>
 </html>
