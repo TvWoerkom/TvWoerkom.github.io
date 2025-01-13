@@ -178,6 +178,7 @@ function startQRCodeScanning(videoElement) {
 
 // Function to reactivate video scanning after pressing "Next"
 function startNextScan() {
+  pauseSpotifyPlayback()
   const videoElement = document.getElementById('camera-feed');
   const nextButton = document.getElementById('next-button');
   
