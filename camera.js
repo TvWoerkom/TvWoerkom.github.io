@@ -6,49 +6,55 @@ async function getMediaDevices() {
     return videoDevices;
   } catch (error) {
     console.error('Error accessing devices:', error);
+    return [];
   }
 }
 
-// Function to show the camera feed from the back camera or front camera as a fallback
+// Function to automatically select the back-facing camera if possible
 async function showCameraFeed() {
-  const devices = await getMediaDevices();
-  const videoElement = document.getElementById('camera-feed');
-  const messageElement = document.getElementById('message');
-  
-  const loadingElement = document.getElementById('loading-message');
-  loadingElement.style.display = 'none'; // Hide loading message once devices are fetched
+  const videoElement = document.getElementById('camera-feed'); // Get the video element by ID
+  const messageElement = document.getElementById('message');   // Get the message element by ID
 
-  // If no devices are found, show a message
-  if (devices.length === 0) {
-    messageElement.textContent = 'No video devices found.';
-    messageElement.style.display = 'block';
-    return;
-  }
+  try {
+    const devices = await getMediaDevices();
 
-  // Try to find the back camera first
-  const backCamera = devices.find(device => device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('environment'));
+    // Try to find the back-facing camera by checking the facingMode of the camera
+    const backCamera = devices.find(device => device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('environment'));
 
-  // If no back camera is found, fall back to the front camera
-  const frontCamera = devices.find(device => device.label.toLowerCase().includes('front') || device.label.toLowerCase().includes('user'));
+    let cameraToUse = null;
 
-  // Use the back camera if found, otherwise use the front camera
-  const selectedCamera = backCamera || frontCamera;
+    // If back camera is found, select it
+    if (backCamera) {
+      cameraToUse = backCamera;
+    } else {
+      // Look for a camera with facingMode: "environment"
+      const environmentCamera = devices.find(device => device.label.toLowerCase().includes('environment'));
 
-  if (selectedCamera) {
-    try {
-      // Request access to the selected camera
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: selectedCamera.deviceId }
-      });
-      videoElement.srcObject = stream; // Set the camera feed to the video element
-      messageElement.style.display = 'none';  // Hide message if access is granted
-    } catch (error) {
-      console.error('Error accessing camera:', error);
-      messageElement.textContent = 'Please allow camera access to view the feed.';
-      messageElement.style.display = 'block';
+      // If found, use it as the back camera
+      if (environmentCamera) {
+        cameraToUse = environmentCamera;
+      } else {
+        // Fallback: Select the first available camera (typically front camera or whatever is available)
+        cameraToUse = devices[0];
+      }
     }
-  } else {
-    messageElement.textContent = 'No suitable camera found.';
+
+    if (cameraToUse) {
+      // Request camera access with the chosen camera deviceId
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: cameraToUse.deviceId }
+      });
+
+      // Set the video element's source to the stream from the selected camera
+      videoElement.srcObject = stream;
+
+      // Hide the "Please allow camera access" message
+      messageElement.style.display = 'none';
+    }
+
+  } catch (error) {
+    console.error('Error accessing camera:', error);
+    // Show the message if there was an issue accessing the camera
     messageElement.style.display = 'block';
   }
 }
