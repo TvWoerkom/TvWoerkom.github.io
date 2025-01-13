@@ -18,7 +18,7 @@ async function showCameraSelection() {
   devices.forEach(device => {
     const option = document.createElement('option');
     option.value = device.deviceId;
-    option.text = device.label || `Camera ${device.deviceId}`;
+    option.text = device.label || Camera ${device.deviceId};
     selectElement.appendChild(option);
   });
 
@@ -57,4 +57,4 @@ async function showCameraFeed(deviceId) {
 }
 
 // Call the function to show the camera selection when the page loads
-window.onload = showCameraSelection;
+window.onload = showCameraSelection;  this worked best, continue with that
