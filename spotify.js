@@ -80,7 +80,7 @@ function displayMessage(message, type) {
 // Event listeners
 document.getElementById('getTokenBtn').addEventListener('click', redirectToSpotifyLogin);
 document.getElementById('nextBtn').addEventListener('click', () => {
- window.location.href = '../templates/qr_coding.html';
+ window.location.href = 'qr_coding.html';
 });
 
 // Handle redirect when the user is sent back from Spotify login
