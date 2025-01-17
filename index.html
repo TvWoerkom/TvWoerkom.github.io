@@ -43,7 +43,7 @@
   <div id="container">
     <button id="getTokenBtn">Login here</button>
     <div id="result"></div>
-    <button id="nextBtn">Go to QR Code Scanner</button>
+    <button id="nextBtn" onclick="window.location.href = '{{url_for('qr_coding')}}';">Go to QR Code Scanner</button>
   </div>
 
   <script src="spotify.js"></script>
