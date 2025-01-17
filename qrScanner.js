@@ -3,7 +3,9 @@ async function scanQRCode(videoElement) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   const nextButton = document.getElementById('next-button');
-  
+  const videoBorder = document.getElementById('camera-container');
+  const h1 = document.getElementById('h1');
+
   // Set the canvas size to match the video dimensions
   canvas.width = videoElement.videoWidth;
   canvas.height = videoElement.videoHeight;
@@ -61,6 +63,8 @@ async function scanQRCode(videoElement) {
 
       // Show the "Next" button
       nextButton.style.display = 'block';
+      videoBorder.style.display = 'none';
+      h1.innerText  = 'Hitster Me! (...baby one more time?)';
 
       return; // Stop further scanning once a valid QR code is found
     }
@@ -211,10 +215,14 @@ function startNextScan() {
   pauseSpotifyPlayback()  // Now calling the async function correctly
   const videoElement = document.getElementById('camera-feed');
   const nextButton = document.getElementById('next-button');
+  const videoBorder = document.getElementById('camera-container');
+  const h1 = document.getElementById('h1');
   
   // Show the video element and hide the "Next" button
   videoElement.style.display = 'block';
+  videoBorder.style.display = 'block';
   nextButton.style.display = 'none';
+  h1.innerText = 'Scan a QRcode to start the song';
 
   // Restart the camera feed and QR scanning
   showCameraFeed();

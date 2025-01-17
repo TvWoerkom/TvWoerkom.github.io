@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Camera Feed with QR Code Scanner</title>
   <style>
+   body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #4B0082, #4CAF50); /* Zacht kleurverloop */
+      height: 100vh;
+    }
+    h1 {
+      text-align: center;
+    }
     #camera-container {
       width: 100%;
       max-width: 600px;
@@ -45,7 +54,7 @@
 </head>
 <body>
 
-  <h1>Camera Feed with QR Code Scanner</h1>
+  <h1 id = "h1">Scan a QRcode to start the song</h1>
 
   <div id="camera-container">
     <video id="camera-feed" autoplay></video>

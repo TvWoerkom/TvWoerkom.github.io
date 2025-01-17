@@ -74,13 +74,13 @@ function handleSpotifyRedirect() {
 function displayMessage(message, type) {
   const resultElement = document.getElementById('result');
   resultElement.textContent = message;
-  resultElement.style.color = type === 'success' ? 'green' : 'red';
+  resultElement.style.color = type === 'success' ? 'black' : 'red';
 }
 
 // Event listeners
 document.getElementById('getTokenBtn').addEventListener('click', redirectToSpotifyLogin);
 document.getElementById('nextBtn').addEventListener('click', () => {
- window.location.href = 'qr_coding.html';
+ window.location.href = '../templates/qr_coding.html';
 });
 
 // Handle redirect when the user is sent back from Spotify login
