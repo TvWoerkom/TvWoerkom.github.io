@@ -47,7 +47,7 @@ async function showCameraFeed() {
 	  console.log(selectedStream)
 
       videoElement.srcObject = selectedStream;
-      messageElement.style.display = 'none'; // Hide permission message
+      // messageElement.style.display = 'none'; // Hide permission message
       await startQRCodeScanning(videoElement); // Start QR scanning
     }
   } catch (error) {
