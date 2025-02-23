@@ -37,6 +37,12 @@ async function pauseTrack() {
 // Restart the currently playing track
 async function restartTrack() {
     await spotifyApiRequest('/seek?position_ms=0', 'PUT');
+	const playbackState = await spotifyApiRequest('', 'GET').then(res => res.json());
+    const isPlaying = playbackState.is_playing;
+	
+	if (!isPlaying){
+		await playTrack();  // Only play if it's not currently playing
+	}
     console.log('Track restarted.');
 }
 

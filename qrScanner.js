@@ -121,10 +121,12 @@ function isValidURL(string) {
   }
 }
 
+
 // Function to play a Spotify track using the Web API
 async function playSpotifyTrack(spotifyTrackURI, accessToken, position = 0) {
   const devicesUrl = 'https://api.spotify.com/v1/me/player/devices';
   const playUrl = 'https://api.spotify.com/v1/me/player/play';
+  window.location.href = 'spotify://';
 
   try {
     // Step 1: Fetch available devices
@@ -148,8 +150,12 @@ async function playSpotifyTrack(spotifyTrackURI, accessToken, position = 0) {
       return;
     }
 
-    // Step 2: Select a device (for example, the first one)
-    const targetDevice = devices[0];
+    // Step 2: Select a device  (for example, the first one)
+	// 1. Try to find a phone device
+	const phoneDevice = devices.find(device => device.type === 'Smartphone');
+
+	// 2. If no phone, select the first device in the list
+	const targetDevice = phoneDevice || devices[0];
     console.log(`Using device: ${targetDevice.name} (${targetDevice.id})`);
 
     // Step 3: Prepare the play request payload
