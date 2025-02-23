@@ -17,11 +17,12 @@ async function showCameraFeed() {
 
   try {
     const devices = await getMediaDevices();
-    console.log(devices)
+    console.log(devices);
 
     // Try to find the back-facing camera by checking the label for 'back' or 'environment'
     const backCamera = devices.find(device => device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('environment'));
-
+    console.log(backCamera);
+    
     let cameraToUse = null;
 
     // If back camera is found, select it
