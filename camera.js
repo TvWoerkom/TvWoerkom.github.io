@@ -47,9 +47,9 @@ async function showCameraFeed() {
       });
 	  console.log(selectedStream)
 
-      //videoElement.srcObject = selectedStream;
-      //messageElement.style.display = 'none'; // Hide permission message
-      //await startQRCodeScanning(videoElement); // Start QR scanning
+      videoElement.srcObject = selectedStream;
+      messageElement.style.display = 'none'; // Hide permission message
+      await startQRCodeScanning(videoElement); // Start QR scanning
     }
   } catch (error) {
     console.error('Error accessing camera:', error);
