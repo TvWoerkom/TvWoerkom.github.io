@@ -41,6 +41,9 @@ async function showCameraFeed() {
 	console.log(cameraToUse)
     if (cameraToUse) {
       // Step 3: Use the selected camera
+	setTimeout(() => {
+   	 console.log("Waited 3 seconds!");
+	}, 3000);  // Waits for 3000 milliseconds (3 seconds)
       const selectedStream = await navigator.mediaDevices.getUserMedia({
         video: { deviceId: cameraToUse.deviceId}
       });
