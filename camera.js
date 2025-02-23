@@ -41,17 +41,14 @@ async function showCameraFeed() {
 	console.log(cameraToUse)
     if (cameraToUse) {
       // Step 3: Use the selected camera
-	await setTimeout(() => {
-   	 console.log("Waited 3 seconds!");
-	}, 3000);  // Waits for 3000 milliseconds (3 seconds)
       const selectedStream = await navigator.mediaDevices.getUserMedia({
         video: { deviceId: cameraToUse.deviceId}
       });
 	  console.log(selectedStream)
 
-      videoElement.srcObject = selectedStream;
-      messageElement.style.display = 'none'; // Hide permission message
-      await startQRCodeScanning(videoElement); // Start QR scanning
+      //videoElement.srcObject = selectedStream;
+      //messageElement.style.display = 'none'; // Hide permission message
+      //await startQRCodeScanning(videoElement); // Start QR scanning
     }
   } catch (error) {
     console.error('Error accessing camera:', error);
