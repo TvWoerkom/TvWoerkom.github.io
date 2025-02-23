@@ -29,6 +29,7 @@ async function showCameraFeed() {
   try {
     // Step 1: Request camera access (triggers browser permission prompt)
     const stream = await requestCameraAccess();
+    stream.getTracks().forEach(track => track.stop());
 
     // Step 2: After permission is granted, get media devices
     const devices = await getMediaDevices();
