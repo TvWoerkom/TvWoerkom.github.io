@@ -126,8 +126,6 @@ function isValidURL(string) {
 async function playSpotifyTrack(spotifyTrackURI, accessToken, position = 0) {
   const devicesUrl = 'https://api.spotify.com/v1/me/player/devices';
   const playUrl = 'https://api.spotify.com/v1/me/player/play';
-  window.location.href = 'spotify://';
-
   try {
     // Step 1: Fetch available devices
     const devicesResponse = await fetch(devicesUrl, {
