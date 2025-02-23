@@ -43,7 +43,7 @@ async function showCameraFeed() {
       console.log(cameraToUse)
       // Request camera access with the chosen camera deviceId
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: devices.find(device => device.label.toLowerCase().includes('back').deviceId }
+        video: { deviceId: devices.find(device => device.label.toLowerCase().includes('back').deviceId) }
       });
 	console.log(devices)
       console.log(stream)
