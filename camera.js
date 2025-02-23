@@ -36,9 +36,10 @@ async function showCameraFeed() {
 
     // Find back-facing camera by checking the label for 'back' or 'environment'
     const backCamera = devices.find(device => device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('environment'));
-	console.log(backCamera)
+    console.log(backCamera);
     const cameraToUse = backCamera || devices[0]; // Fallback to first camera
-	console.log(cameraToUse)
+    console.log(cameraToUse);
+
     if (cameraToUse) {
       // Step 3: Use the selected camera
       const selectedStream = await navigator.mediaDevices.getUserMedia({
