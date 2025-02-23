@@ -1,14 +1,3 @@
-// Function to request camera access (this triggers the browser permission prompt)
-async function requestCameraAccess() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    return stream;
-  } catch (error) {
-    console.error('Error requesting camera access:', error);
-    throw error;
-  }
-}
-
 // Function to get all media devices
 async function getMediaDevices() {
   try {
@@ -23,38 +12,57 @@ async function getMediaDevices() {
 
 // Function to automatically select the back-facing camera if possible
 async function showCameraFeed() {
-  const videoElement = document.getElementById('camera-feed');
-  const messageElement = document.getElementById('message');
+  const videoElement = document.getElementById('camera-feed'); // Get the video element by ID
+  const messageElement = document.getElementById('message');   // Get the message element by ID
 
   try {
-    // Step 1: Request camera access (triggers browser permission prompt)
-    const stream = await requestCameraAccess();
-
-    // Step 2: After permission is granted, get media devices
     const devices = await getMediaDevices();
-    console.log('Available devices:', devices);
-
-    // Find back-facing camera by checking the label for 'back' or 'environment'
+	console.log(devices)
+    // Try to find the back-facing camera by checking the label for 'back' or 'environment'
     const backCamera = devices.find(device => device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('environment'));
 	console.log(backCamera)
-    const cameraToUse = backCamera || devices[0]; // Fallback to first camera
-	console.log(cameraToUse)
-    if (cameraToUse) {
-      // Step 3: Use the selected camera
-      const selectedStream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: cameraToUse.deviceId}
-      });
-	  console.log(selectedStream)
+    let cameraToUse = null;
 
-      videoElement.srcObject = selectedStream;
-      // messageElement.style.display = 'none'; // Hide permission message
-      await startQRCodeScanning(videoElement); // Start QR scanning
+    // If back camera is found, select it
+    if (backCamera) {
+      cameraToUse = backCamera;
+    } else {
+      // Look for a camera with 'environment' in the label
+      const environmentCamera = devices.find(device => device.label.toLowerCase().includes('environment'));
+
+      // If found, use it as the back camera
+      if (environmentCamera) {
+        cameraToUse = environmentCamera;
+      } else {
+        // Fallback: Select the first available camera (typically front camera or whatever is available)
+        cameraToUse = devices[0];
+      }
+    }
+
+    if (cameraToUse) {
+      console.log(cameraToUse)
+      // Request camera access with the chosen camera deviceId
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: cameraToUse.deviceId }
+      });
+      console.log(stream)
+
+
+      // Set the video element's source to the stream from the selected camera
+      videoElement.srcObject = stream;
+
+      // Hide the "Please allow camera access" message
+      messageElement.style.display = 'none';
+
+      // Start QR code scanning after the camera feed starts
+      await startQRCodeScanning(videoElement); // Make sure the function is called correctly
     }
   } catch (error) {
     console.error('Error accessing camera:', error);
-    messageElement.style.display = 'block'; // Show message if access fails
+    // Show the message if there was an issue accessing the camera
+    messageElement.style.display = 'block';
   }
 }
 
-// Run on page load
+// Call the function to show the camera feed when the page loads
 window.onload = showCameraFeed;
