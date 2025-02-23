@@ -45,7 +45,7 @@ async function showCameraFeed() {
       const selectedStream = await navigator.mediaDevices.getUserMedia({
         video: { deviceId: { exact: cameraToUse.deviceId } }
       });
-	  console.log(selectedStream)
+      console.log(selectedStream);
 
       videoElement.srcObject = selectedStream;
       messageElement.style.display = 'none'; // Hide permission message
