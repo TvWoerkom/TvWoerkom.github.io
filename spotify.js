@@ -8,7 +8,6 @@ const encodedCredentials = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
 
 
 // Step 1: Redirect to Spotify Login
-window.location.href = 'spotify://';
 function redirectToSpotifyLogin() {
   const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${CLIENT_ID}&scope=${encodeURIComponent(SCOPES)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
   window.location.href = authUrl;
